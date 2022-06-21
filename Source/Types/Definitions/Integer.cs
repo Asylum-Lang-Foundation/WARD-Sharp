@@ -39,6 +39,6 @@ public class VarTypeInteger : VarType {
         return (Signed ? "s" : "u") + BitWidth.ToString();
     }
 
-    public override Expression DefaultValue() => new ExpressionConstInt(Signed, BitWidth, 0);
+    public override Expression DefaultValue() => new ExpressionConstInt(this, 0);
 
 }

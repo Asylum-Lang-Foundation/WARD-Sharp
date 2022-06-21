@@ -1,19 +1,18 @@
 using LLVMSharp.Interop;
+using WARD.Statements;
 using WARD.Types;
 
 namespace WARD.Expressions;
 
 // Expression for a constant integer.
 public class ExpressionConstInt : Expression {
-    public bool Signed;
-    public uint BitWidth;
-    public ulong Value;
+    public VarTypeInteger IntType { get; }
+    public ulong Value { get; }
 
     // Create a new constant int expression.
-    public ExpressionConstInt(bool signed, uint bitWidth, ulong value) {
+    public ExpressionConstInt(VarTypeInteger intType, ulong value) {
         Type = ExpressionEnum.ConstInt;
-        Signed = signed;
-        BitWidth = bitWidth;
+        IntType = intType;
         Value = value;
     }
 
@@ -21,10 +20,12 @@ public class ExpressionConstInt : Expression {
         LValue = false;
     }
 
-    protected override VarType ReturnType() => new VarTypeInteger(Signed, BitWidth);
+    protected override VarType ReturnType() => IntType;
 
-    public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-        return LLVMValueRef.CreateConstInt(LLVMTypeRef.CreateInt(BitWidth), Value, Signed);
+    public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, CompilationContext param) {
+        return LLVMValueRef.CreateConstInt(IntType.GetLLVMType(), Value, IntType.Signed);
     }
+
+    public override string ToString() => "((" + IntType.ToString() + ")" + (IntType.Signed ? ((long)Value).ToString() : Value.ToString()) + ")";
 
 }
