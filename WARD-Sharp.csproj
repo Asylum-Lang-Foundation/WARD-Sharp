@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>WARD_Sharp</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="LLVMSharp" Version="14.0.0-beta1"/>
+    <PackageReference Include="LLVMSharp.Interop" Version="14.0.0-beta1"/>
+  </ItemGroup>
+</Project>
