@@ -1,5 +1,6 @@
 using LLVMSharp.Interop;
 using WARD.Exceptions;
+using WARD.Scoping;
 
 namespace WARD.Statements;
 
@@ -8,6 +9,9 @@ public interface ICompileable {
 
     // Get the context where the item is from.
     FileContext GetFileContext();
+
+    // Set the scopes for this item and children given the parent scope.
+    void SetScopes(Scope parent);
 
     // Resolve variable definitions.
     void ResolveVariables();

@@ -1,13 +1,17 @@
 using LLVMSharp.Interop;
 using WARD.Common;
 using WARD.Exceptions;
+using WARD.Scoping;
 
 namespace WARD.Statements;
 
 // A collection of statements that can be compiled.
 public class CodeStatements : ICompileable {
+    private static int InstanceId = 0; // Id that is incremented to match scopes.
     private bool BlockTerminated; // If the block has been terminated or not.
     private LLVMValueRef ReturnedValue; // Value for this block to return.
+    public int Instance { get; } // Instance Id to match scope.
+    public Scope Scope { get; private set; } // Scope for items with the code statements.
     public List<ICompileable> Statements { get; } // Statements to compile.
     public FileContext FileContext; // Context for the statements.
 
@@ -18,6 +22,7 @@ public class CodeStatements : ICompileable {
         Statements = statements.ToList();
         BlockTerminated = false;
         ReturnedValue = null;
+        Instance = InstanceId++;
     }
 
     // Add a code statement.
@@ -43,6 +48,10 @@ public class CodeStatements : ICompileable {
     public void ReturnAValue(LLVMValueRef val) {
         TerminateBlock();
         ReturnedValue = val;
+    }
+
+    public void SetScopes(Scope parent) {
+        Scope = Scope.EnterScope("%CODESTATEMENTS%_" + Instance, false);
     }
 
     public void ResolveVariables() {

@@ -1,20 +1,26 @@
 using LLVMSharp.Interop;
 using WARD.Exceptions;
 using WARD.Expressions;
+using WARD.Scoping;
 using WARD.Types;
 
 namespace WARD.Statements;
 
 // Return a value.
 public class StatementReturn : ICompileable {
-    public Expression ReturnValue { get; }
-    public FileContext FileContext;
+    public Scope Scope { get; internal set; } // Scope of the return statement.
+    public Expression ReturnValue { get; } // Value to return.
+    public FileContext FileContext; // Context where the return statement is in the file.
 
     public FileContext GetFileContext() => FileContext;
 
     // Create a new return statement.
     public StatementReturn(Expression returnValue) {
         ReturnValue = returnValue;
+    }
+
+    public void SetScopes(Scope parent) {
+        Scope = parent; // The scope matches.
     }
 
     public void ResolveVariables() {

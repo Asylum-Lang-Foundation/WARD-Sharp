@@ -1,11 +1,12 @@
 using WARD.Common;
 using WARD.Exceptions;
+using WARD.Scoping;
 
 namespace WARD.Builder;
 
 // File for general builder purposes.
 public partial class ProgramBuilder {
-    internal ScopeTable RootScope = new ScopeTable();
+    internal Scope RootScope = new Scope(); // Root scope of the program.
     private Dictionary<string, CompilationUnit> CompilationUnits = new Dictionary<string, CompilationUnit>(); // Units to compile in parallel.
     private List<string> UnitsInProgress = new List<string>(); // Units that are being built.
 
@@ -41,6 +42,8 @@ public partial class ProgramBuilder {
     public void EndCompilationUnit(UnitBuilder unitBuilder) {
         UnitsInProgress.Remove(unitBuilder.Path);
         CompilationUnits.Add(unitBuilder.Path, unitBuilder.Unit);
+        RootScope.ImportScope(unitBuilder.RootScope);
+        unitBuilder.Dispose();
     }
 
 }

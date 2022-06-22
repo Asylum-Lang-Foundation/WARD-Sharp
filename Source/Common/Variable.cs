@@ -4,7 +4,7 @@ namespace WARD.Common;
 
 // Contains information about a variable. TODO: MANGLING FOR FUNCTIONS!!!
 public class Variable {
-    public string Name { get; } // Name of the variable.
+    public string Name { get; internal set; } // Name of the variable.
     public VarType Type { get; } // Type of the variable.
     public DataAccessFlags AccessFlags { get; } // How the data is accessed.
 

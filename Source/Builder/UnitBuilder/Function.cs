@@ -1,3 +1,4 @@
+using WARD.Scoping;
 using WARD.Statements;
 
 namespace WARD.Builder;
@@ -6,9 +7,13 @@ namespace WARD.Builder;
 public partial class UnitBuilder {
 
     // Add a function.
-    public void AddFunction(Function function, CodeStatements definition) {
-        function.Definition = definition;
-        throw new System.NotImplementedException();
+    public void AddFunction(Function function, Tuple<CodeStatements, Scope> definition = null) {
+        if (definition != null) {
+            function.Definition = definition.Item1;
+            CurrentScope.EnterScope(function.Name).ImportScope(definition.Item2);
+        }
+        Unit.Items.Add(function);
+        CurrentScope.Table.AddFunction(function);
     }
 
 }

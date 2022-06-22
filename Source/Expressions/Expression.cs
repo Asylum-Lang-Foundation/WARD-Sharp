@@ -1,5 +1,6 @@
 using LLVMSharp.Interop;
 using WARD.Exceptions;
+using WARD.Scoping;
 using WARD.Statements;
 using WARD.Types;
 
@@ -7,11 +8,16 @@ namespace WARD.Expressions;
 
 // Low level operation that can be compiled directly to LLVM bitcode.
 public abstract class Expression : ICompileable {
+    public Scope Scope { get; protected set; } // Scope for this item.
     public ExpressionEnum Type { get; protected set; } // The type of expression.
     public bool LValue { get; protected set; } = true; // If the value should be loaded or not when compiling.
     public FileContext FileContext = null; // File context for the expression.
 
     public FileContext GetFileContext() => FileContext;
+
+    public void SetScopes(Scope parent) {
+        Scope = parent; // Expression doesn't change scope.
+    }
 
     // Resolve types.
     public void ResolveTypes() => ResolveTypes(null, null);
