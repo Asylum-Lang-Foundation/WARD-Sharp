@@ -6,8 +6,8 @@ namespace WARD.Expressions;
 
 // Expression for a constant integer.
 public class ExpressionConstInt : Expression {
-    public VarTypeInteger IntType { get; }
-    public ulong Value { get; }
+    public VarTypeInteger IntType { get; } // Type of integer that is constant.
+    public ulong Value { get; } // Value of the constant integer.
 
     // Create a new constant int expression.
     public ExpressionConstInt(VarTypeInteger intType, ulong value) {

@@ -22,11 +22,19 @@ public class CompilationUnit {
             item.ResolveTypes();
         }
 
-        // Compile the module.
+        // Initialize module and optimizer.
         var mod = LLVMModuleRef.CreateWithName(modName);
+        var fpm = mod.CreateFunctionPassManager();
+        fpm.AddInstructionCombiningPass();
+        fpm.AddReassociatePass();
+        fpm.AddNewGVNPass();
+        fpm.AddCFGSimplificationPass();
+        fpm.InitializeFunctionPassManager();
+
+        // Compile the module.
         var builder = LLVMBuilderRef.Create(mod.Context);
         foreach (var item in Items) {
-            item.Compile(mod, builder, new CompilationContext());
+            item.Compile(mod, builder, new CompilationContext(fpm));
         }
         return mod;
 

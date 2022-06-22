@@ -33,4 +33,7 @@ public partial class VarType {
     public static VarTypeInteger DWord { get; } = UInt;
     public static VarTypeInteger QWord { get; } = ULong;
 
+    // Other definitions.
+    public static VarTypePointer String { get; } = new VarTypePointer(Char);
+
 }

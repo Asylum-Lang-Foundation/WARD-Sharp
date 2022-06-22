@@ -8,7 +8,7 @@ namespace WARD.Statements;
 // A collection of statements that can be compiled.
 public class CodeStatements : ICompileable {
     private static int InstanceId = 0; // Id that is incremented to match scopes.
-    private bool BlockTerminated; // If the block has been terminated or not.
+    public bool BlockTerminated { get; private set; } // If the block has been terminated or not.
     private LLVMValueRef ReturnedValue; // Value for this block to return.
     public int Instance { get; } // Instance Id to match scope.
     public Scope Scope { get; private set; } // Scope for items with the code statements.
@@ -51,7 +51,10 @@ public class CodeStatements : ICompileable {
     }
 
     public void SetScopes(Scope parent) {
-        Scope = Scope.EnterScope("%CODESTATEMENTS%_" + Instance, false);
+        Scope = parent.EnterScope("%CODESTATEMENTS%_" + Instance, false);
+        foreach (var c in Statements) {
+            c.SetScopes(Scope);
+        }
     }
 
     public void ResolveVariables() {
@@ -80,6 +83,7 @@ public class CodeStatements : ICompileable {
                 param.CodeStatementsStack.Pop();
             }
         }
+        param.LastBlock = this;
         return ReturnedValue;
     }
 
