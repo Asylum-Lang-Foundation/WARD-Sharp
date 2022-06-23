@@ -4,5 +4,7 @@ namespace WARD.Expressions;
 public enum ExpressionEnum {
     ConstInt,
     ConstPointer,
-    ConstString
+    ConstString,
+    LLVM,
+    Variable
 }

@@ -13,7 +13,7 @@ public class CodeStatements : ICompileable {
     public int Instance { get; } // Instance Id to match scope.
     public Scope Scope { get; private set; } // Scope for items with the code statements.
     public List<ICompileable> Statements { get; } // Statements to compile.
-    public FileContext FileContext; // Context for the statements.
+    public FileContext FileContext { get; } // Context for the statements.
 
     public FileContext GetFileContext() => FileContext;
 

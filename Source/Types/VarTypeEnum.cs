@@ -9,7 +9,6 @@ public enum VarTypeEnum {
     Function,
     Tuple,
     Pointer,
-    Reference,
     Array,
     Alias
 }

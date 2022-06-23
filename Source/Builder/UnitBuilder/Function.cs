@@ -1,3 +1,4 @@
+using WARD.Generics;
 using WARD.Scoping;
 using WARD.Statements;
 
@@ -14,6 +15,11 @@ public partial class UnitBuilder {
         }
         Unit.Items.Add(function);
         CurrentScope.Table.AddFunction(function);
+    }
+
+    // Add a generic function.
+    public void AddGenericFunction(Function function, Template template, Tuple<CodeStatements, Scope> definition = null) {
+        throw new System.NotImplementedException();
     }
 
 }
