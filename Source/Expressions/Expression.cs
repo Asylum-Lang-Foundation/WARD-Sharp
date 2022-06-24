@@ -15,7 +15,7 @@ public abstract class Expression : ICompileable {
 
     public FileContext GetFileContext() => FileContext;
 
-    public void SetScopes(Scope parent) {
+    public virtual void SetScopes(Scope parent) {
         Scope = parent; // Expression doesn't change scope.
     }
 
@@ -40,7 +40,7 @@ public abstract class Expression : ICompileable {
 
     // Vfunctions.
     public virtual void ResolveVariables() {} // Resolve variable and function call references to a list of possibilities.
-    protected virtual void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {} // Resolve types, type check, add casts, and solidify all function references. The parameters are so calls can have expressions resolve the correct function.
+    public virtual void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {} // Resolve types, type check, add casts, and solidify all function references. The parameters are so calls can have expressions resolve the correct function.
     protected abstract VarType ReturnType(); // Get the return type of an expression.
     public abstract LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, CompilationContext param); // Compile the expression.
     public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder) {} // Compile any variable definitions.

@@ -6,7 +6,7 @@ using WARD.Types;
 
 namespace WARD.Statements;
 
-// Return a value.
+// Return a value. TODO: TYPE CHECK RETURN STATEMENT WITH FUNCTION RETURN TYPE!
 public class StatementReturn : ICompileable {
     public Scope Scope { get; internal set; } // Scope of the return statement.
     public Expression ReturnValue { get; } // Value to return.

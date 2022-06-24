@@ -2,7 +2,11 @@ namespace WARD.Expressions;
 
 // Types of expressions.
 public enum ExpressionEnum {
+    Call,
     ConstInt,
     ConstPointer,
-    ConstString
+    ConstString,
+    Function,
+    LLVM,
+    Variable
 }

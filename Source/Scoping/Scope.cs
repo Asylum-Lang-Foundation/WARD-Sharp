@@ -40,6 +40,20 @@ public class Scope {
         }
     }
 
+    // Scope exists.
+    public bool ScopeExists(string path) {
+        if (path.Equals("")) return true;
+        string toEnter = path.Split(".")[0];
+        if (!Children.ContainsKey(toEnter)) {
+            return false;
+        }
+        if (path.Contains(".")) {
+            return Children[toEnter].ScopeExists(path.Substring(path.IndexOf(".") + 1));
+        } else {
+            return true;
+        }
+    }
+
     // Exit a scope.
     public Scope ExitScope() {
         if (Parent == null) {
