@@ -5,7 +5,7 @@ namespace WARD.Types;
 
 // Alias to another type. TODO: FIGURE OUT HOW TO RESOLVE A TYPE!
 public class VarTypeAlias : VarType {
-    private VarType Resolved; // The resolved variable type.
+    //private VarType Resolved; // The resolved variable type.
     public string Alias { get; } // Alias the type is referring to.
 
     // Resolve a type alias in the current scope.

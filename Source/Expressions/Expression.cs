@@ -15,7 +15,7 @@ public abstract class Expression : ICompileable {
 
     public FileContext GetFileContext() => FileContext;
 
-    public void SetScopes(Scope parent) {
+    public virtual void SetScopes(Scope parent) {
         Scope = parent; // Expression doesn't change scope.
     }
 

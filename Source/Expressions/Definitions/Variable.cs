@@ -8,7 +8,8 @@ namespace WARD.Expressions;
 // Expression for a variable.
 public class ExpressionVariable : Expression {
     public string Path { get; } // Path to the variable.
-    private Variable Resolved; // Resolved variable.
+    private List<Variable> PossibleVariables; // Possible variables that may be the resolved one.
+    private Variable Resolved = null; // Resolved variable.
 
     // Create a variable reference.
     public ExpressionVariable(string path) {
@@ -17,7 +18,7 @@ public class ExpressionVariable : Expression {
     }
 
     public override void ResolveVariables() {
-        throw new System.NotImplementedException();
+        PossibleVariables = Scope.Table.ResolveVariables(Path);
     }
 
     protected override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {

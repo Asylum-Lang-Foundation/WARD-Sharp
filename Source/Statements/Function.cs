@@ -27,8 +27,10 @@ public class Function : Variable, ICompileableTopLevel {
     }
 
     public void SetScopes(Scope parent) {
-        Scope = parent.EnterScope(Name, false);
-        if (Definition != null) Definition.SetScopes(Scope);
+        if (Definition != null) {
+            Scope = parent.EnterScope(Name, false);
+            Definition.SetScopes(Scope);
+        }
     }
 
     public void ResolveVariables() {

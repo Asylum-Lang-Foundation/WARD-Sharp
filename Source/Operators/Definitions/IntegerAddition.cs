@@ -12,10 +12,10 @@ namespace WARD.Operators;
 public static partial class Operators {
 
     // Addition operator for whole numbers.
-    public static Tuple<FunctionGeneric, Tuple<CodeStatements, Scope>> WholeNumberAddition() {
+    public static Tuple<FunctionGeneric, Tuple<CodeStatements, Scope>> IntegerAddition() {
 
         // Define template.
-        var template = new Template(new TemplateItem("T", TemplateItemTypeEnum.Type, Concept.WholeNumber));
+        var template = new Template(new TemplateItem("T", TemplateItemTypeEnum.Type, Concept.ArithmeticInteger));
 
         // Define the function body.
         var cb = new CodeBuilder();
@@ -30,7 +30,7 @@ public static partial class Operators {
 
         // Define the function.
         FunctionGeneric function = new FunctionGeneric(
-            "W_BuiltInOperator_WholeNumberAddition",
+            "W_BuiltInOperator_IntegerAddition",
             new VarTypeFunction(
                 new VarTypeAlias("T"),
                 null,

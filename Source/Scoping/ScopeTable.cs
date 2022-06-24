@@ -54,4 +54,9 @@ public class ScopeTable {
         }
     }
 
+    // Resolve a variable.
+    public List<Variable> ResolveVariables(string path) {
+        throw new System.NotImplementedException();
+    }
+
 }

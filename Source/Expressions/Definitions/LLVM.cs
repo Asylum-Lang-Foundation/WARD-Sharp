@@ -1,5 +1,6 @@
 using LLVMSharp.Interop;
 using WARD.Exceptions;
+using WARD.Scoping;
 using WARD.Statements;
 using WARD.Types;
 
@@ -16,6 +17,12 @@ public class ExpressionLLVM : Expression {
         Type = ExpressionEnum.LLVM;
         RetType = retType;
         Args = args;
+    }
+
+    public override void SetScopes(Scope parent) {
+        foreach (var a in Args) {
+            a.SetScopes(parent);
+        }
     }
 
     public override void ResolveVariables() {
