@@ -56,12 +56,28 @@ public class ScopeTable {
 
     // Find a scope table that matches the base path.
     public ScopeTable FindWithMatchingBasepath(string path) {
-        throw new System.NotImplementedException();
+
+        // No base path.
+        if (!path.Contains(".")) return this;
+
+        // Find with base path.
+        string basePath = path.Substring(0, path.LastIndexOf("."));
+        Scope currScope = Scope;
+        while (!currScope.ScopeExists(basePath)) {
+            if (currScope.Parent == null) return null;
+            currScope = currScope.Parent;
+        }
+        return currScope.Table;
+
     }
 
     // Get the name of an item.
     public string GetItemName(string path) {
-        throw new System.NotImplementedException();
+        if (path.Contains(".")) {
+            return path.Split(".").Last();
+        } else {
+            return path;
+        }
     }
 
     // Resolve a variable.
