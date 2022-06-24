@@ -14,7 +14,7 @@ public class ExpressionConstString : Expression {
         Str = str;
     }
 
-    protected override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+    public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
         LValue = false;
     }
 

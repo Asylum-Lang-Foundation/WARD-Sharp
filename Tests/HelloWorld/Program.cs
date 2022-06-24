@@ -26,8 +26,7 @@ ub.AddFunction(new Function(
 // Notice that we don't have to add the code to the function immediately like we do here, we could have prepared it in advance.
 // A function is a variable, so we can just fetch it with a variable expression and WARD will automatically resolve it.
 CodeBuilder cb = new CodeBuilder();
-// This line below should be uncommented, but call and variable expressions aren't done yet :<
-//cb.Code(new ExpressionCall(new ExpressionVariable("puts"), new ExpressionConstString("Hello World!")));
+cb.Code(new ExpressionCall(new ExpressionVariable("puts"), new ExpressionConstString("Hello World!")));
 cb.Code(new StatementReturn(new ExpressionConstInt(VarType.Int, 0)));
 ub.AddFunction(new Function(
     "main",

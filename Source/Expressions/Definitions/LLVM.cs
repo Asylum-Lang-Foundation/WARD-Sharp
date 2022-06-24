@@ -31,7 +31,7 @@ public class ExpressionLLVM : Expression {
         }
     }
 
-    protected override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+    public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
         LValue = false;
         foreach (var a in Args) {
             a.ResolveTypes();

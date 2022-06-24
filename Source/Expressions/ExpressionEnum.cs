@@ -6,6 +6,7 @@ public enum ExpressionEnum {
     ConstInt,
     ConstPointer,
     ConstString,
+    Function,
     LLVM,
     Variable
 }

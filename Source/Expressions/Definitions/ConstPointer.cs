@@ -19,7 +19,7 @@ public class ExpressionConstPointer : Expression {
         Value = value;
     }
 
-    protected override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+    public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
         LValue = false;
     }
 
