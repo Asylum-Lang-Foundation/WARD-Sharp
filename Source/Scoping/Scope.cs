@@ -87,6 +87,16 @@ public class Scope {
         }
     }
 
+    // Mangle the scope.
+    public string Mangled() {
+        string ret = "";
+        foreach (var item in GetFullPath().Split(".")) {
+            if (item.Length == 0) continue;
+            ret += item.Length + item;
+        }
+        return ret;
+    }
+
     public override string ToString() => GetFullPath();
 
 }

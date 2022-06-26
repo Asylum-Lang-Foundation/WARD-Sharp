@@ -16,7 +16,7 @@ public class Function : Variable, ICompileableTopLevel {
     public CodeStatements Definition { get; internal set; } = null; // Function definition if one exists.
     public FileContext FileContext { get; } // File context of where the function is.
     public bool NameMangled => FuncName != "main" && Attributes.Where(x => x.Name.Equals("NoMangle")).Count() < 1; // If the function's name is mangled.
-    public override string ToString() => NameMangled ? (Name.Length + Name + Type.Mangled()) : Name;
+    public override string ToString() => NameMangled ? ("W_" + Scope.Parent.Mangled() + FuncName.Length + FuncName + "E" + Type.Mangled()) : Name;
     public FileContext GetFileContext() => FileContext;
 
     // Create a new function. WARNING: This does not add the function to the scope (do it manually to add both the mangled variable name and regular function name).
