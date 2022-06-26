@@ -21,6 +21,7 @@ public class StatementReturn : ICompileable {
 
     public void SetScopes(Scope parent) {
         Scope = parent; // The scope matches.
+        ReturnValue.SetScopes(parent);
     }
 
     public void ResolveVariables() {

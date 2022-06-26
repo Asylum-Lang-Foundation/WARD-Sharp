@@ -1,5 +1,5 @@
-using LLVMSharp;
 using LLVMSharp.Interop;
+using WARD.Statements;
 
 namespace WARD.Runtime;
 
@@ -8,26 +8,29 @@ public partial class CompiledProgram {
 
     // Execute the main function of the compiled program.
     public int Execute(string[] envp = null, params string[] args) {
+
+        // Initialize engine.
         ExecutionEngine.InitializeAllTargets();
         var exe = Mods.ElementAt(0).Value.CreateMCJITCompiler();
+
+        // Set proper envp if none and execute main.
         if (envp == null) envp = new string[0];
         LLVMValueRef main = Mods.ElementAt(0).Value.GetNamedFunction("main");
         return exe.RunFunctionAsMain(main, (uint)args.Length, args, envp);
     }
 
-    /*
+    // Get a function to execute from the compiled program. NOTE: Does not support variadic arguments!
+    public TDelegate GetFunctionExecuter<TDelegate>(Function function) {
 
-    // Execute a function from the compiled program.
-    public T ExecuteFunction<T>(string name, FunctionType signature, params object[] args) {
+        // Initialize engine.
         ExecutionEngine.InitializeAllTargets();
         var exe = Mods.ElementAt(0).Value.CreateMCJITCompiler();
-        if (args == null) args = new object[0];
-        LLVMValueRef func = Mods.ElementAt(0).Value.GetNamedFunction(name);
-        delegate realFuncSig;
-        var exeFunc = exe.GetPointerToGlobal<realFuncSig>(func);
-        exeFunc();
-    }
 
-    */
+        // Get args and function.
+        LLVMValueRef func = Mods.ElementAt(0).Value.GetNamedFunction(function.ToString());
+        var exeFunc = exe.GetPointerToGlobal<TDelegate>(func);
+        return exeFunc;
+
+    }
 
 }

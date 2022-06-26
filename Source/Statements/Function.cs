@@ -34,6 +34,11 @@ public class Function : Variable, ICompileableTopLevel {
     }
 
     public void ResolveVariables() {
+        // Shadow parameters.
+        foreach (var v in (Type as VarTypeFunction).Parameters) {
+            var newVar = new Variable(v.Name, v.Type, v.AccessFlags);
+            Scope.Table.AddVariable(newVar);
+        }
         if (Definition != null) Definition.ResolveVariables();
     }
 
@@ -61,14 +66,12 @@ public class Function : Variable, ICompileableTopLevel {
         // Shadow parameters.
         int i = 0;
         foreach (var v in (Type as VarTypeFunction).Parameters) {
-            var newVar = new Variable(v.Name, v.Type, v.AccessFlags) {
-                Value = builder.BuildAlloca(
-                    v.Type.GetLLVMType(),
-                    "W_Param_" + i
-                )
-            };
-            Scope.Table.AddVariable(newVar);
-            builder.BuildStore(CompiledVal.Params[i++], newVar.Value);
+            Variable resolved = Scope.Table.ResolveVariable(v.Name);
+            resolved.Value = builder.BuildAlloca(
+                v.Type.GetLLVMType(),
+                "W_Param_" + i
+            );
+            builder.BuildStore(CompiledVal.Params[i++], resolved.Value);
         }
 
         // Compile function.

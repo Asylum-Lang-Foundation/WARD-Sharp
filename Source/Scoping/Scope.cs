@@ -87,4 +87,6 @@ public class Scope {
         }
     }
 
+    public override string ToString() => GetFullPath();
+
 }

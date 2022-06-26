@@ -17,9 +17,11 @@ public partial class UnitBuilder {
         CurrentScope.Table.AddFunction(function);
     }
 
-    // Add a generic function.
-    public void AddGenericFunction(Function function, Template template, Tuple<CodeStatements, Scope> definition = null) {
+    // Add an operator.
+    public void AddOperator(Tuple<string, FunctionGeneric, Tuple<CodeStatements, Scope>> operatorDef) {
         throw new System.NotImplementedException();
     }
+
+    // Add a cast. TODO!!!
 
 }

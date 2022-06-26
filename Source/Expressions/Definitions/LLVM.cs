@@ -15,6 +15,7 @@ public class ExpressionLLVM : Expression {
     // Create a new LLVM expression. WARNING: Types are not checked, only use this if you know what you are doing!
     public ExpressionLLVM(string instruction, VarType retType, params Expression[] args) {
         Type = ExpressionEnum.LLVM;
+        Instruction = instruction;
         RetType = retType;
         Args = args;
     }
