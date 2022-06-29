@@ -7,7 +7,7 @@ namespace WARD.Generics;
 
 // Template scope for having generic code. TODO: VARIADIC PARAMETERS!!!
 public class Template : ICompileable {
-    private TemplateItem[] Items; // Template items.
+    public TemplateItem[] Items { get; } // Template items.
     public FileContext FileContext { get; } // Context for the template.
 
     public FileContext GetFileContext() => FileContext;
@@ -35,6 +35,14 @@ public class Template : ICompileable {
 
     public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, CompilationContext param) {
         throw new NotImplementedException();
+    }
+
+    public override bool Equals(object obj) {
+        throw new System.NotImplementedException();
+    }
+
+    public override int GetHashCode() {
+        throw new System.NotImplementedException();
     }
 
 }

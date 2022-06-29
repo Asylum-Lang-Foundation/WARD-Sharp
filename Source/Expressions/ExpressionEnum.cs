@@ -7,6 +7,10 @@ public enum ExpressionEnum {
     ConstPointer,
     ConstString,
     Function,
+    ImplicitCast,
     LLVM,
-    Variable
+    Operator,
+    ResizeInt,
+    Variable,
+    NumExpressionTypes
 }

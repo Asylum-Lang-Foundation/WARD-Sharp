@@ -42,7 +42,7 @@ public abstract class Expression : ICompileable {
     public virtual void ResolveVariables() {} // Resolve variable and function call references to a list of possibilities.
     public virtual void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {} // Resolve types, type check, add casts, and solidify all function references. The parameters are so calls can have expressions resolve the correct function.
     protected abstract VarType ReturnType(); // Get the return type of an expression.
+    public virtual void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder) {} // Compile any variable definitions.
     public abstract LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, CompilationContext param); // Compile the expression.
-    public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder) {} // Compile any variable definitions.
 
 }

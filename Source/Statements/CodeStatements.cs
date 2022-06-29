@@ -9,7 +9,7 @@ namespace WARD.Statements;
 public class CodeStatements : ICompileable {
     private static int InstanceId = 0; // Id that is incremented to match scopes.
     public bool BlockTerminated { get; private set; } // If the block has been terminated or not.
-    private LLVMValueRef ReturnedValue; // Value for this block to return.
+    public LLVMValueRef ReturnedValue { get; private set; } // Value for this block to return.
     public int Instance { get; } // Instance Id to match scope.
     public Scope Scope { get; private set; } // Scope for items with the code statements.
     public List<ICompileable> Statements { get; } // Statements to compile.

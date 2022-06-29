@@ -9,10 +9,10 @@ using WARD.Types;
 namespace WARD.Operators;
 
 // Addition operator.
-public static partial class Operators {
+public static partial class Operator {
 
     // Addition operator for whole numbers.
-    public static Tuple<FunctionGeneric, Tuple<CodeStatements, Scope>> IntegerAddition() {
+    public static Tuple<string, FunctionGeneric, Tuple<CodeStatements, Scope>> IntegerAddition() {
 
         // Define template.
         var template = new Template(new TemplateItem("T", TemplateItemTypeEnum.Type, Concept.ArithmeticInteger));
@@ -42,7 +42,7 @@ public static partial class Operators {
         );
 
         // Return data.
-        return new Tuple<FunctionGeneric, Tuple<CodeStatements, Scope>>(function, cb.EndBuilding());
+        return new Tuple<string, FunctionGeneric, Tuple<CodeStatements, Scope>>("Add", function, cb.EndBuilding());
 
     }
 

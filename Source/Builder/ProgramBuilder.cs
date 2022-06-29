@@ -11,6 +11,7 @@ public partial class ProgramBuilder {
     public CompiledProgram Compile() {
 
         // Make sure all the builders have exited.
+        EndCompilationUnit(WARDBuilder);
         if (UnitsInProgress.Count > 0) {
             Error.ThrowInternal("Not all of the unit builders have finished building code.");
             return null;

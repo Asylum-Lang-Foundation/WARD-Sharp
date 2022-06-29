@@ -16,7 +16,7 @@ public class Function : Variable, ICompileableTopLevel {
     public CodeStatements Definition { get; internal set; } = null; // Function definition if one exists.
     public FileContext FileContext { get; } // File context of where the function is.
     public bool NameMangled => FuncName != "main" && Attributes.Where(x => x.Name.Equals("NoMangle")).Count() < 1; // If the function's name is mangled.
-    public override string ToString() => NameMangled ? (Name.Length + Name + Type.Mangled()) : Name;
+    public override string ToString() => NameMangled ? ("_W" + Scope.Parent.Mangled() + FuncName.Length + FuncName + "E" + Type.Mangled()) : Name;
     public FileContext GetFileContext() => FileContext;
 
     // Create a new function. WARNING: This does not add the function to the scope (do it manually to add both the mangled variable name and regular function name).
@@ -34,14 +34,23 @@ public class Function : Variable, ICompileableTopLevel {
     }
 
     public void ResolveVariables() {
-        if (Definition != null) Definition.ResolveVariables();
+        // Shadow parameters.
+        if (Definition != null) {
+            foreach (var v in (Type as VarTypeFunction).Parameters) {
+                var newVar = new Variable(v.Name, v.Type, v.AccessFlags);
+                Scope.Table.AddVariable(newVar);
+            }
+            Definition.ResolveVariables();
+        }
     }
 
     public void ResolveTypes() {
         if (Definition != null) Definition.ResolveTypes();
     }
 
-    public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder) {} // Nothing to do here as we are calling this in the compile function.
+    public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder) {
+        if (Inline) Definition.CompileDeclarations(mod, builder);
+    }
 
     public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, CompilationContext param) {
 
@@ -61,14 +70,12 @@ public class Function : Variable, ICompileableTopLevel {
         // Shadow parameters.
         int i = 0;
         foreach (var v in (Type as VarTypeFunction).Parameters) {
-            var newVar = new Variable(v.Name, v.Type, v.AccessFlags) {
-                Value = builder.BuildAlloca(
-                    v.Type.GetLLVMType(),
-                    "W_Param_" + i
-                )
-            };
-            Scope.Table.AddVariable(newVar);
-            builder.BuildStore(CompiledVal.Params[i++], newVar.Value);
+            Variable resolved = Scope.Table.ResolveVariable(v.Name);
+            resolved.Value = builder.BuildAlloca(
+                v.Type.GetLLVMType(),
+                "W_Param_" + i
+            );
+            builder.BuildStore(CompiledVal.Params[i++], resolved.Value);
         }
 
         // Compile function.
@@ -90,6 +97,52 @@ public class Function : Variable, ICompileableTopLevel {
         param.Fpm.RunFunctionPassManager(CompiledVal);
         return CompiledVal;
 
+    }
+
+    // Do an inline call.
+    public LLVMValueRef CompileInline(LLVMModuleRef mod, LLVMBuilderRef builder, CompilationContext param, LLVMValueRef[] parameters) {
+
+        // Shadow parameters.
+        int i = 0;
+        foreach (var v in (Type as VarTypeFunction).Parameters) {
+            Variable resolved = Scope.Table.ResolveVariable(v.Name);
+            resolved.Value = builder.BuildAlloca(
+                v.Type.GetLLVMType(),
+                "W_Param_" + i
+            );
+            builder.BuildStore(parameters[i++], resolved.Value);
+        }
+
+        // Compile function.
+        param.InlineCallDepth++;
+        Definition.Compile(mod, builder, param);
+        param.InlineCallDepth--;
+
+        // Automatically insert return if none detected.
+        if (!param.LastBlock.BlockTerminated) {
+            if ((Type as VarTypeFunction).ReturnType.Equals(VarType.Void)) {
+                return null; // No void for you.
+            } else {
+                Error.ThrowInternal(Name + " does not return a value.");
+                return null;
+            }
+        }
+        return param.LastBlock.ReturnedValue;
+
+    }
+
+    // Add a function to the program scope at compile time.
+    public void AddToCompileTimeScope(CompilationContext param, Scope definitionScope, Dictionary<string, VarType> templateParameters = null) {
+        param.RootScope.EnterScope(Name).ImportScope(definitionScope);
+        SetScopes(param.RootScope);
+        ResolveVariables();
+        ResolveTypes();
+        if (templateParameters != null) {
+            foreach (var t in templateParameters) {
+                definitionScope.Table.AddType(t.Key, t.Value);
+            }
+        }
+        param.RootScope.Table.AddFunction(this);
     }
 
 }
