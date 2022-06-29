@@ -35,11 +35,13 @@ public class Function : Variable, ICompileableTopLevel {
 
     public void ResolveVariables() {
         // Shadow parameters.
-        foreach (var v in (Type as VarTypeFunction).Parameters) {
-            var newVar = new Variable(v.Name, v.Type, v.AccessFlags);
-            Scope.Table.AddVariable(newVar);
+        if (Definition != null) {
+            foreach (var v in (Type as VarTypeFunction).Parameters) {
+                var newVar = new Variable(v.Name, v.Type, v.AccessFlags);
+                Scope.Table.AddVariable(newVar);
+            }
+            Definition.ResolveVariables();
         }
-        if (Definition != null) Definition.ResolveVariables();
     }
 
     public void ResolveTypes() {
