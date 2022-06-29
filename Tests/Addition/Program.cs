@@ -10,13 +10,12 @@ using WARD.Types;
 
 // Setup builders.
 ProgramBuilder pb = new ProgramBuilder();
-//pb.RegisterStandardOperators();
+pb.RegisterStandardOperators();
 UnitBuilder ub = pb.NewCompilationUnit("Addition");
 
 // Addition function.
 CodeBuilder cb = new CodeBuilder();
-cb.Code(new StatementReturn(new ExpressionLLVM("add", VarType.Int, new ExpressionVariable("num1"), new ExpressionVariable("num2"))));
-//cb.Code(new StatementReturn(new ExpressionOperator("Add", new ExpressionVariable("num1"), new ExpressionOperator("num2"))));
+cb.Code(new StatementReturn(new ExpressionOperator("Add", new ExpressionVariable("num1"), new ExpressionVariable("num2"))));
 var addFunc = new Function(
     "add",
     new VarTypeFunction(VarType.Int, null, new Variable("num1", VarType.Int), new Variable("num2", VarType.Int))

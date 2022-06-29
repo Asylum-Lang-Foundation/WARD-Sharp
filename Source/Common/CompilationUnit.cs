@@ -34,7 +34,7 @@ public class CompilationUnit {
         // Compile the module.
         var builder = LLVMBuilderRef.Create(mod.Context);
         foreach (var item in Items) {
-            item.Compile(mod, builder, new CompilationContext(fpm));
+            item.Compile(mod, builder, new CompilationContext(fpm, rootScope));
         }
         return mod;
 

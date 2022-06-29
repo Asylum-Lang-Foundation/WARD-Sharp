@@ -46,16 +46,16 @@ public class StatementReturn : ICompileable {
 
         // Return a value.
         if (ReturnValue == null) {
-            LLVMValueRef ret = builder.BuildRetVoid();
+            LLVMValueRef ret = param.InlineCallDepth == 0 ? builder.BuildRetVoid() : null;
             param.CodeStatementsStack.Peek().ReturnAValue(ret);
             return ret;
         } else if (ReturnValue.Equals(VarType.Void)) {
-            LLVMValueRef ret = builder.BuildRetVoid();
+            LLVMValueRef ret = param.InlineCallDepth == 0 ? builder.BuildRetVoid() : null;
             param.CodeStatementsStack.Peek().ReturnAValue(ret);
             return ret;
         } else {
             LLVMValueRef ret = ReturnValue.CompileRValue(mod, builder, param);
-            builder.BuildRet(ret);
+            if (param.InlineCallDepth == 0) builder.BuildRet(ret);
             param.CodeStatementsStack.Peek().ReturnAValue(ret);
             return ret;
         }

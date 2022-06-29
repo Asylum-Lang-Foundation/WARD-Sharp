@@ -9,8 +9,10 @@ namespace WARD.Scoping;
 public class ScopeTable {
     private Scope Scope = null; // Scope containing this table.
     private Dictionary<string, VarType> Types = new Dictionary<string, VarType>(); // Types that are available.
-    private List<Function> Functions = new List<Function>(); // Functions that are available.
     private Dictionary<string, Variable> Variables = new Dictionary<string, Variable>(); // Variables that are available.
+    private List<Function> Functions = new List<Function>(); // Functions that are available.
+    private List<FunctionGeneric> GenericFunctions = new List<FunctionGeneric>(); // Subset of functions that are also generic.
+    private Dictionary<string, List<FunctionGeneric>> Operators = new Dictionary<string, List<FunctionGeneric>>(); // Operators that are available.
 
     // Create a new scope table.
     public ScopeTable(Scope scope) {
@@ -38,7 +40,35 @@ public class ScopeTable {
     // Add a function to the scope table. A function is a variable, but the variable version has the mangled name and so should be unique while the function name isn't.
     public void AddFunction(Function function, bool addVariable = true) {
         Functions.Add(function);
-        if (addVariable) AddVariable(function);
+        var genericFunc = function as FunctionGeneric;
+        if (addVariable && genericFunc == null) AddVariable(function); // Generic functions don't have an actual address.
+        if (genericFunc != null) {
+            bool alreadyDefined = false;
+            foreach (var g in GenericFunctions) { // Check for function being defined already.
+                alreadyDefined |= !(g.FuncName.Equals(genericFunc.FuncName) && g.Template.Equals(genericFunc.Template));
+            }
+            if (alreadyDefined) {
+                Error.ThrowInternal("Duplicate template for generic function \"" + function.FuncName + "\".");
+            } else {
+                GenericFunctions.Add(genericFunc);
+            }
+        }
+    }
+
+    // Add an operator to the scope table.
+    public void AddOperator(string op, FunctionGeneric function, bool addFunction = true) {
+        if (!Operators.ContainsKey(op)) {
+            Operators.Add(op, new List<FunctionGeneric>());
+        }
+        var list = Operators[op];
+        foreach (var func in list) {
+            if (func.Template.Equals(function.Template)) {
+                Error.ThrowInternal("Duplicate template for generic operator function \"" + function.FuncName + "\" for operator \"" + op + "\".");
+                return;
+            }
+        }
+        if (addFunction) AddFunction(function);
+        list.Add(function);
     }
 
     // Merge with another table.
@@ -50,7 +80,12 @@ public class ScopeTable {
             AddVariable(v.Value);
         }
         foreach (var f in table.Functions) {
-            AddFunction(f, false);
+            AddFunction(f, false); // Takes care of generics too.
+        }
+        foreach (var o in table.Operators) {
+            foreach (var f in o.Value) {
+                AddOperator(o.Key, f, false);
+            }
         }
     }
 
@@ -120,6 +155,14 @@ public class ScopeTable {
         }
         return funcs;
 
+    }
+
+    // Resolve functions that match an operator.
+    public List<FunctionGeneric> ResolveOperator(string op) {
+        List<FunctionGeneric> ret = new List<FunctionGeneric>();
+        if (Operators.ContainsKey(op)) ret.AddRange(Operators[op]);
+        if (Scope.Parent != null) ret.AddRange(Scope.Parent.Table.ResolveOperator(op));
+        return ret;
     }
 
 }
